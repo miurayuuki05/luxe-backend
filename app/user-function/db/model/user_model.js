@@ -7,6 +7,11 @@ const User = sequelize.define('User', {
         autoIncrement: true,
         primaryKey: true,
     },
+    uuid:{
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+    },
     username: {
         type: DataTypes.STRING(100),
         allowNull: false,
@@ -25,7 +30,7 @@ const User = sequelize.define('User', {
         allowNull: false,
     },
     salt: {
-        type: DataTypes.STRING(20),
+        type: DataTypes.STRING(64),
         allowNull: false,
     },
     balance: {
@@ -57,11 +62,11 @@ const Cart = sequelize.define('Cart', {
         field: 'cartId',
     },
     userId: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
         references: {
             model: User,
-            key: 'id',
+            key: 'uuid',
         },
     },
     productId: {
@@ -100,11 +105,11 @@ const SessionToken = sequelize.define('SessionToken', {
         field: 'token_id',
     },
     userId: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
         references: {
             model: User,
-            key: 'id',
+            key: 'uuid',
         },
     },
     token: {

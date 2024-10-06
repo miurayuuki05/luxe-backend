@@ -1,10 +1,13 @@
 const express = require('express');
 const app = express();
 const port = 3050;
+const cookieParser = require('cookie-parser');
 
-app.get('/login', (req, res) => {
-  res.send('this is the login function');
-});
+const userAuth = require('./route/userauth');
+
+app.use(express.json());
+app.use(cookieParser('secret'));
+app.use('/userauth', userAuth);
 
 app.listen(port, () => {
   console.log(`Listening at :${port}`);

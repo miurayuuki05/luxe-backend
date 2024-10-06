@@ -7,6 +7,10 @@ const User = sequelize.define('User', {
         autoIncrement: true,
         primaryKey: true,
     },
+    uuid:{
+        type: DataTypes.UUIDV4,
+        defaultValue: Sequelize.UUIDV4,
+    },
     username: {
         type: DataTypes.STRING(100),
         allowNull: false,
@@ -25,7 +29,7 @@ const User = sequelize.define('User', {
         allowNull: false,
     },
     salt: {
-        type: DataTypes.STRING(20),
+        type: DataTypes.STRING(64),
         allowNull: false,
     },
     balance: {
@@ -49,6 +53,49 @@ const User = sequelize.define('User', {
     },
 });
 
+const Cart = sequelize.define('Cart', {
+    cartId: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        field: 'cartId',
+    },
+    userId: {
+        type: DataTypes.UUIDV4,
+        allowNull: false,
+        references: {
+            model: User,
+            key: 'uuid',
+        },
+    },
+    productId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    quantity: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+            isInt: true,
+            min: 1, // Ensures quantity is positive
+        },
+    },
+    totalprice: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false,
+    },
+    createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.NOW,
+        field: 'created_at',
+    },
+    updatedAt: {
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.NOW,
+        field: 'updated_at',
+    },
+});
+
 const SessionToken = sequelize.define('SessionToken', {
     tokenId: {
         type: DataTypes.INTEGER,
@@ -57,11 +104,11 @@ const SessionToken = sequelize.define('SessionToken', {
         field: 'token_id',
     },
     userId: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUIDV4,
         allowNull: false,
         references: {
             model: User,
-            key: 'id',
+            key: 'uuid',
         },
     },
     token: {
@@ -101,7 +148,4 @@ const SessionToken = sequelize.define('SessionToken', {
     },
 });
 
-User.hasMany(SessionToken, { foreignKey: 'userId' });
-SessionToken.belongsTo(User, { foreignKey: 'userId' });
-
-module.exports = { User, SessionToken };
+module.exports = { User, Cart, SessionToken };
