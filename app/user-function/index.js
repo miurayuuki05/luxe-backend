@@ -8,7 +8,7 @@ require('./db/serve');
 
 app.use(express.json());
 app.use(cookieParser());
-app.use('/userprof', userFunction);
+app.use('/userfunc', userFunction);
 
 app.listen(port, () => {
   console.log(`Listening at :${port}`);
